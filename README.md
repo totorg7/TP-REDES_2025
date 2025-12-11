@@ -124,8 +124,8 @@
 
 ### Ejecutar server API :
 ```bash
-cd API
 pip install -r requirements.txt
+cd API
 python server_api.py
 ```
 
