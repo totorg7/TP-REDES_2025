@@ -29,7 +29,6 @@ app = FastAPI(
     version="3.0.0"
 )
 
-# Configurar rate limiting
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -206,7 +205,6 @@ async def create_nobel_prize(
     - Usuario normal: puede crear premios
     - Administrador: puede crear premios
     """
-    # Verificar si ya existe un premio con el mismo año y categoría
     for existing_prize in NOBEL_PRIZES_DATA:
         if (existing_prize.get("year") == prize.year and
                 existing_prize.get("category", "").lower() == prize.category.lower()):
@@ -217,7 +215,6 @@ async def create_nobel_prize(
 
     new_prize_data = prize.model_dump(exclude_unset=True)
     
-    # Generar IDs para los laureados si no vienen
     for laureate in new_prize_data.get("laureates", []):
         if "id" not in laureate or not laureate["id"]:
             laureate["id"] = f"{laureate.get('firstname', '')}{laureate.get('surname', '')}{prize.year}".replace(" ", "").lower()

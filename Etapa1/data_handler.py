@@ -21,7 +21,7 @@ def download_nobel_prizes_data(url: str = NOBEL_PRIZES_URL, filename: str = LOCA
     print(f"Intentando descargar datos desde: {url}")
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Lanza una excepción si el código de estado es un error (4xx o 5xx)
+        response.raise_for_status()  
         data = response.json()
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
@@ -123,7 +123,6 @@ def describe_data_structure(data: list):
     num_objects = len(data)
     print(f"El archivo contiene un total de {num_objects} objetos (premios Nobel).")
 
-    # Descripción de las propiedades del objeto típico (tomando el primero)
     if num_objects > 0:
         first_prize = data[0]
         print("\nEjemplo de Estructura de un Objeto 'Premio':")
@@ -152,25 +151,20 @@ def describe_data_structure(data: list):
 if __name__ == "__main__":
     print("--- Iniciando Proceso de Carga y Análisis de Datos (Etapa 1) ---")
 
-    # 1. Descargar el archivo JSON si no existe o se desea actualizar
     if not os.path.exists(LOCAL_JSON_FILE) or input("¿Desea descargar la última versión de los datos? (s/n): ").lower() == 's':
         if not download_nobel_prizes_data():
             print("No se pudo descargar los datos. Abortando la operación.")
             exit()
-    # 2. Cargar los datos desde el archivo local
     nobel_prizes = load_nobel_prizes_data()
 
     if nobel_prizes:
-        # 3. Realizar descripción de la estructura para el informe
         describe_data_structure(nobel_prizes)
 
-        # Ejemplos de consultas más claros para depuración/prueba
         print("\n--- Ejecutando Ejemplos de Consultas ---")
 
         print(f"Número total de premios Nobel cargados: {len(get_all_prizes(nobel_prizes))}")
 
-        # Ejemplo 1: Premios de un año específico
-        target_year = "2020" # Puedes cambiar esto
+        target_year = "2020" 
         prizes_by_year = get_prize_by_year(nobel_prizes, target_year)
         print(f"\nConsulta por Año: Premios en el año {target_year}")
         if prizes_by_year:
@@ -179,8 +173,7 @@ if __name__ == "__main__":
         else:
             print(f"  - No se encontraron premios para el año {target_year}.")
 
-        # Ejemplo 2: Premios de una categoría específica
-        target_category = "chemistry" # Puedes cambiar esto
+        target_category = "chemistry" 
         prizes_by_category = get_prize_by_category(nobel_prizes, target_category)
         print(f"\nConsulta por Categoría: Premios en la categoría '{target_category.capitalize()}'")
         if prizes_by_category:
@@ -190,7 +183,6 @@ if __name__ == "__main__":
             print(f"  - No se encontraron premios en la categoría '{target_category}'.")
 
         
-        # Ejemplo 3: Buscar laureados por nombre y apellido
         print("\n--- Búsqueda de Premios por Nombre de Laureado ---")
         laureate_firstname = "Marie" 
         laureate_surname = "Curie"

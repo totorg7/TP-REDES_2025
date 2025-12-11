@@ -13,17 +13,14 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-# Configuración de autenticación Basic
 security = HTTPBasic()
 
-# Configuración de rate limiting
 limiter = Limiter(key_func=get_remote_address)
 
-# Credenciales de usuario (en producción, esto debería estar en una base de datos)
 USERS = {
     "admin": {
         "username": "admin",
-        "password": "admin123",  # En producción, usar hash bcrypt
+        "password": "admin123",  
         "role": "admin"
     },
     "user": {
@@ -70,10 +67,10 @@ def require_admin(user: Dict = Depends(get_current_user)):
 
 # Límites de rate limiting
 RATE_LIMITS = {
-    "default": "100/minute",      # Límite por defecto
-    "admin": "200/minute",        # Límite para administradores
-    "user": "50/minute",          # Límite para usuarios normales
-    "strict": "10/minute"         # Límite estricto para operaciones sensibles
+    "default": "100/minute",      
+    "admin": "200/minute",       
+    "user": "50/minute",          
+    "strict": "10/minute"         
 }
 
 def get_rate_limit_for_user(user: Optional[Dict] = None) -> str:

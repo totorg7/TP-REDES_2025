@@ -6,7 +6,6 @@ import sys
 
 BASE_URL = "http://127.0.0.1:8001"
 
-# Credenciales de autenticación
 CREDENTIALS = {
     "user": {"username": "user", "password": "user123"},
     "admin": {"username": "admin", "password": "admin123"}
@@ -24,7 +23,6 @@ def handle_response(response: requests.Response, success_message: str):
     if response.status_code >= 200 and response.status_code < 300:
         print(f"\nÉXITO: {success_message} (Código de estado: {response.status_code})")
         try:
-            # Algunas respuestas (como 204 No Content) no tienen JSON
             if response.content:
                 print_json_response("Detalles de la Respuesta", response.json())
         except json.JSONDecodeError:
@@ -48,7 +46,6 @@ def get_credentials(require_admin: bool = False):
     username = input("Usuario: ")
     password = input("Contraseña: ")
     
-    # Validar que las credenciales coincidan con las configuradas
     if username == CREDENTIALS["user"]["username"] and password == CREDENTIALS["user"]["password"]:
         print("✅ Autenticación exitosa como usuario normal")
         return username, password
@@ -110,7 +107,6 @@ def search_laureates():
     surname = input("Ingrese el apellido del laureado: ")
     print(f"Buscando premios para {firstname} {surname}...")
     try:
-        # Se usan parámetros de consulta (query parameters)
         response = requests.get(f"{BASE_URL}/laureates/search?firstname={firstname}&surname={surname}")
         handle_response(response, f"Premios para {firstname} {surname} obtenidos exitosamente.")
     except requests.exceptions.RequestException as e:
@@ -151,7 +147,6 @@ def create_nobel_prize():
     """Crea un nuevo premio Nobel."""
     print("\n--- Crear Nuevo Premio Nobel ---")
     
-    # Obtener credenciales
     username, password = get_credentials()
     
     year = input("Año del premio (ej. 2025): ")
@@ -212,10 +207,9 @@ def update_nobel_prize():
 
     new_overall_motivation = input("Nueva motivación general (opcional): ")
     if new_overall_motivation: update_payload["overallMotivation"] = new_overall_motivation
-    elif new_overall_motivation == "": # Para permitir borrar la motivación
+    elif new_overall_motivation == "": 
         update_payload["overallMotivation"] = None
 
-    # Preguntar si desea actualizar laureados
     update_laureates_choice = input("¿Desea actualizar la lista completa de laureados? (s/n): ")
     if update_laureates_choice.lower() == 's':
         new_laureates_data = []
@@ -238,8 +232,8 @@ def update_nobel_prize():
             new_laureates_data.append(laureate_info)
             add_more_laureates = input("¿Desea añadir otro laureado? (s/n): ")
         update_payload["laureates"] = new_laureates_data
-    elif update_laureates_choice.lower() == '': # Si se deja vacío, también se podría interpretar como no cambiar
-        pass # No hacer nada si no se quiere cambiar
+    elif update_laureates_choice.lower() == '': 
+        pass 
 
     if not update_payload:
         print("No se especificaron campos para actualizar. Operación cancelada.")
@@ -257,7 +251,6 @@ def delete_nobel_prize():
     """Elimina un premio Nobel específico."""
     print("\n--- Eliminar Premio Nobel ---")
     
-    # Obtener credenciales de administrador
     username, password = get_credentials(require_admin=True)
     
     year_to_delete = input("Año del premio a eliminar: ")
